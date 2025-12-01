@@ -1,0 +1,16 @@
+(ns jorgen.aoc25.dec__DAY__-test
+  (:require
+    [clojure.test :refer :all]
+    [jorgen.util :as util]
+    [jorgen.aoc25.dec__DAY__ :refer :all]))
+
+
+(deftest testing-
+  (testing "It should "
+    (is (= 1 (part1 (util/file->lines "dec__DAY___sample.txt"))))
+    (is (= 1 (part1 (util/file->lines "dec__DAY___input.txt"))))))
+
+
+  ;(testing "It should "
+  ;  (is (= 1 (part2 (util/file->lines "dec__DAY___sample.txt"))))
+  ;  (is (= 1 (part2 (util/file->lines "dec__DAY___input.txt"))))))
