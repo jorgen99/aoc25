@@ -3,18 +3,20 @@
     [jorgen.util :as util]))
 
 (defn rotations
-  "Parse lines in to [direction amount] pairs"
+  "Parse lines in to +/- amount"
   [lines]
   (->> lines
        (map (fn [s] [(first s) (apply str (rest s))]))
-       (map (fn [[a b]] [(keyword (str a)) (util/parse-int b)]))))
+       (map (fn [[a b]] [(keyword (str a)) (util/parse-int b)]))
+       (map (fn [[direction amount]]
+              (case direction
+                :R amount
+                :L (* -1 amount))))))
 
 
-(defn rotate [[dial zeros] [direction amount]]
+(defn rotate [[dial zeros] amount]
   (let [actual_ammount (mod amount 100)
-        v (case direction
-            :R (+ dial actual_ammount)
-            :L (- dial actual_ammount))
+        v (+ dial actual_ammount)
         new_val (cond
                   (neg? v) (+ 100 v)
                   (>= v 100) (mod v 100)
@@ -24,33 +26,33 @@
       [new_val zeros])))
 
 
-(defn rotate2 [[dial zeros] [direction amount]]
+(defn rotate2 [[dial zeros] amount]
   (let [full_turns (int (/ amount 100))
-        actual_ammount (mod amount 100)
-        v (case direction
-            :R (+ dial actual_ammount)
-            :L (- dial actual_ammount))
-        [new_val passed_zero] (cond
-                                (neg? v) [(+ 100 v) (if (zero? dial) 0 1)]
-                                (= v 0) [0 1]
-                                (>= v 100) [(mod v 100) 1]
-                                :else [v 0])
-        new_zeros (+ zeros full_turns passed_zero)]
-    [new_val new_zeros]))
+        actual_ammount (- amount (* full_turns 100))
+        turns (abs full_turns)
+        new_value (+ dial actual_ammount)
+        [new_dial passed_zero] (cond
+                                 (neg? new_value) [(+ 100 new_value) (if (zero? dial) 0 1)]
+                                 (= new_value 0) [0 1]
+                                 (>= new_value 100) [(mod new_value 100) 1]
+                                 :else [new_value 0])
+        new_zeros (+ zeros turns passed_zero)]
+    [new_dial new_zeros]))
 
 
-(defn dialer [lines rotate-fn]
-  (let [r (rotations lines)
-        start 50]
-    (second (reduce rotate-fn [start 0] r))))
+(defn rotate_dial [lines rotate-fn]
+  (second
+    (reduce rotate-fn
+            [50 0]
+            (rotations lines))))
 
 
 (defn part1 [lines]
-  (dialer lines rotate))
+  (rotate_dial lines rotate))
 
 
 (defn part2 [lines]
-  (dialer lines rotate2))
+  (rotate_dial lines rotate2))
 
 
 (comment
@@ -58,5 +60,3 @@
   (time (part1 (util/file->lines "dec01_input.txt")))
   (time (part2 (util/file->lines "dec01_sample.txt")))
   (time (part2 (util/file->lines "dec01_input.txt"))))
-
-
