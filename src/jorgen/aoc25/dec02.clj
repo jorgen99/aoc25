@@ -20,17 +20,13 @@
 
 (defn find-any-repeating [s]
   (let [length (count s)
-        half (int (/ length 2))]
-    (loop [i 1]
-      (cond
-        (> i half) false
-        (not= 0 (mod length i)) (recur (inc i))
-        :else
-        (let [parts (partition i s)]
-          (cond
-            (apply = parts) true
-            :else
-            (recur (inc i))))))))
+        half (inc (int (/ length 2)))]
+    (->> (range 1 half)
+         (filter #(zero? (mod length %)))
+         (map #(partition % s))
+         (map #(apply = %))
+         (some true?)
+         boolean)))
 
 
 (defn find-patterns [[s e]]
@@ -66,5 +62,3 @@
   (time (part1 (util/file->lines "dec02_input.txt")))
   (time (part2 (util/file->lines "dec02_sample.txt")))
   (time (part2 (util/file->lines "dec02_input.txt"))))
-
-
