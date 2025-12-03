@@ -7,7 +7,7 @@
   [lines]
   (->> lines
        (map (fn [s] [(first s) (apply str (rest s))]))
-       (map (fn [[a b]] [(keyword (str a)) (util/parse-int b)]))
+       (map (fn [[a b]] [(keyword (str a)) (parse-long b)]))
        (map (fn [[direction amount]]
               (case direction
                 :R amount

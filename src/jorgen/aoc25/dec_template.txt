@@ -8,6 +8,10 @@
   lines)
 
 
+(defn part1 [lines]
+  1)
+
+
 (comment
   (time (part1 (util/file->lines "dec__DAY___sample.txt"))))
 ;(time (part1 (util/file->lines "dec__DAY___input.txt")))

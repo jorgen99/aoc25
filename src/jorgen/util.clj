@@ -37,18 +37,9 @@
   ((juxt first last) col))
 
 
-(defn parse-int [s]
-  (Integer/parseInt s))
-
-
 (defn parse-number-str [line]
   (->> line
        (re-seq #"-?\d+")))
-
-
-(defn parse-ints [line]
-  (->> (parse-number-str line)
-       (mapv parse-int)))
 
 
 (defn parse-longs [line]
@@ -164,3 +155,8 @@
   (for [y (range 0 (count grid))
         x (range 0 (count (first grid)))]
     [x y]))
+
+
+(defn index-of [col i]
+  (first
+    (keep-indexed #(when (= %2 i) %1) col)))
