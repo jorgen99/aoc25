@@ -104,6 +104,15 @@
     :nw [(dec x) (dec y)]))
 
 
+(defn neighbor-positions [pos grid dirs]
+  (->> dirs
+       (map #(take-step  pos %))
+       (remove (fn [[x _]] (< x 0)))
+       (remove (fn [[_ y]] (< y 0)))
+       (remove (fn [[x _]] (>= x (count (first grid)))))
+       (remove (fn [[_ y]] (>= y (count grid))))))
+
+
 (defn indicies-of-char
   "Find the indicies of the supplied char/string
   Ex.
@@ -155,6 +164,17 @@
   (for [y (range 0 (count grid))
         x (range 0 (count (first grid)))]
     [x y]))
+
+
+(defn swap [i j col]
+  (let [vi (nth col i)
+        vj (nth col j)]
+    (assoc col i vj j vi)))
+
+
+(defn halves [s]
+  (let [mid (quot (count s) 2)]
+    [(subs s 0 mid) (subs s mid)]))
 
 
 (defn index-of [col i]
